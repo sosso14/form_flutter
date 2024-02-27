@@ -1,0 +1,112 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Center(
+            child: Text("Formulaire"),
+          ),
+        ),
+        body: FormPam(),
+      ),
+    );
+  }
+}
+
+class FormPam extends StatefulWidget {
+  const FormPam({Key? key}) : super(key: key);
+
+  @override
+  _FormPamState createState() => _FormPamState();
+}
+
+class _FormPamState extends State<FormPam> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _remindMe = false;
+  bool _submitButtonPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20.0),
+      child: Form(
+        child: Column(
+          children: [
+            TextFormField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                labelText: 'Entrez votre email',
+                errorText: _submitButtonPressed && _emailController.text.isEmpty ? 'Chan sa obligatwa' : null,
+              ),
+              keyboardType: TextInputType.emailAddress,
+            ),
+            TextFormField(
+              controller: _passwordController,
+              decoration: InputDecoration(
+                labelText: 'Entrez votre mot de passe',
+                errorText: _submitButtonPressed && _passwordController.text.isEmpty ? 'chan sa obligatwa' : null,
+              ),
+              obscureText: true,
+            ),
+            Row(
+              children: [
+                Checkbox(
+                  value: _remindMe,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      _remindMe = value!;
+                    });
+                  },
+                ),
+                Text('Remind me'),
+              ],
+            ),
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+              ),
+              onPressed: () {
+                // Indiquer que le bouton "Submit" a été pressé.
+                setState(() {
+                  _submitButtonPressed = true;
+                });
+
+                // Vérifier si les champs sont vides.
+                if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+                  // Ne rien faire, les erreurs seront affichées automatiquement.
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Succès'),
+                        content: Text('fomile a soumet!'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop(); 
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
+              },
+              child: Text('Soumet'),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
